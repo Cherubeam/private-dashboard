@@ -1,9 +1,10 @@
 const axios = require('axios');
 
-const secrets = require('./secrets');
+const secrets = require('../secrets');
 
-setInterval(function weather() {
-	let encodedAddress = encodeURIComponent(secrets.address);
+function checkWeather() {
+	let encodedAddress = encodeURIComponent(`${secrets.address.street} ${secrets.address.doorNumber}, ${secrets.address.zip} ${secrets.address.city}`);
+
 	let geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
 
 	axios.get(geocodeUrl).then((response) => {
@@ -32,6 +33,10 @@ setInterval(function weather() {
 			console.log(error.message);
 		}
 	});
-}, 600000);
 
-module.exports.weather = weather;
+	setTimeout(() => {
+		checkWeather();
+	}, 600000);
+}
+
+module.exports.weather = checkWeather;
